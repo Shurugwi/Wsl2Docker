@@ -105,12 +105,15 @@ if($NeedsPcRestart)
 }
 
 $AlpineImageFileName = DownloadAlpineImage
-#$wsloutput = (& wsl -l --all)
-$wsloutput = Start-Process -FilePath wsl -ArgumentList "-l -q" -NoNewWindow
+$wsloutput = (& wsl -l -q)
+#$wsloutput = Start-Process -FilePath wsl -ArgumentList "-l -q" -NoNewWindow
 if($wsloutput -contains "LocalDockerHost")
 {
     Write-Host "Docker Wsl Image already exists. Run the following command to remove it:"
-    Write-Host "wsl -unregister LocalDockerHost"
+    Write-Host "wsl --unregister LocalDockerHost"
+
+    Write-Host "Run the following command to start an instance:"
+    Write-Host "wsl -d LocalDockerHost"
 }
 else 
 {
@@ -130,9 +133,8 @@ else
 
     $wsloutput = & wsl --import LocalDockerHost $DefaultWslFolder $AlpineImageFileName
     $wsloutput
+    & wsl -d LocalDockerHost -e sh -c "ls"
 }
-
-& wsl -d LocalDockerHost
 
 Write-Host "Done"
 
