@@ -53,7 +53,7 @@ function DownloadAlpineImage {
     return $AlpineImageFileName
 }
 
-if($RebootPending)
+if(RebootPending)
 {
     Write-Host "Your computer needs to be restarted before running this script again."
     exit
