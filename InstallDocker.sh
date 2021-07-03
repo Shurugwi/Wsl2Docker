@@ -2,11 +2,16 @@
 
 echo "Installing Docker"
 
-apk del docker-cli docker-engine docker-openrc docker-compose docker shadow curl
+apk del docker-cli docker-engine docker-openrc docker-compose docker
 apk update
 apk upgrade -U
 
 apk add docker --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
+apk add shadow curl
+
+apk update
+apk upgrade -U
+
 addgroup $USER docker
 
 sed -i -e 's/^\(docker:x\):[^:]\+/\1:36257/' /etc/group
@@ -31,7 +36,7 @@ if [ ! -S "/mnt/wsl/shared-docker/docker.sock" ]; then
     chgrp docker /mnt/wsl/shared-docker
 fi
 
-if [ ! psgrep dockerd > 0 ]; then
+if [ ! $(pgrep dockerd) > 0 ]; then
     /mnt/c/Windows/System32/wsl.exe -d LocalDockerHost sh -c "nohup dockerd < /dev/null > $DOCKER_DIR/dockerd.log 2>&1" &
 fi
 EOF
