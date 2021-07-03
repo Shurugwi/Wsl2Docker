@@ -106,6 +106,7 @@ if((Get-WindowsOptionalFeature -Online -FeatureName:VirtualMachinePlatform).Stat
 
 if($NeedsPcRestart)
 {
+    EnsureWsl2Kernel
     Write-Host "Your computer needs to be restarted before wsl can be used."
     Restart-Computer -Confirm
     exit
