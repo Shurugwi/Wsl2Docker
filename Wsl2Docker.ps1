@@ -22,6 +22,11 @@ function RebootPending {
     return $false
 }
 
+function MyDocumentsFolder
+{
+    return [Environment]::GetFolderPath(“mydocuments”)
+}
+
 function GetAlpineVersion {
     $versionContent = (Invoke-WebRequest -Uri "https://alpinelinux.org/downloads").Content
     $av = (((Select-String -InputObject $versionContent -Pattern "<strong>(.+?)</strong>" | Select-Object -ExpandProperty Matches -First 1 | Select-Object -ExpandProperty Value) -replace "<strong>", "") -replace "</strong>", "")
@@ -33,12 +38,10 @@ function DownloadAlpineImage {
     $AlpineVersion = GetAlpineVersion
     $AlpineVersionSegments = $AlpineVersion.Split(".")
     
-    $AlpineImageUrl = "https://dl-cdn.alpinelinux.org/alpine/v$($AlpineVersionSegments[0]).$($AlpineVersionSegments[1])/releases/x86_64/alpine-minirootfs-$($AlpineVersionSegments[0]).$($AlpineVersionSegments[1]).$($AlpineVersionSegments[2])-x86_64.tar.gz"    
+    $AlpineImageUrl = "https://dl-cdn.alpinelinux.org/alpine/v$($AlpineVersionSegments[0]).$($AlpineVersionSegments[1])/releases/x86_64/alpine-minirootfs-$($AlpineVersionSegments[0]).$($AlpineVersionSegments[1]).$($AlpineVersionSegments[2])-x86_64.tar.gz"
     Write-Host "Alpine Image Url $($AlpineImageUrl)"
 
-    $MyDocumentsFolder = [Environment]::GetFolderPath(“mydocuments”)
-
-    $AlpineImageFileName = "$($MyDocumentsFolder)\AlpineImage$($AlpineVersion).tar.gz"
+    $AlpineImageFileName = "$(MyDocumentsFolder)\AlpineImage$($AlpineVersion).tar.gz"
 
     if(![System.IO.File]::Exists($AlpineImageFileName))
     {
@@ -51,6 +54,21 @@ function DownloadAlpineImage {
     }
 
     return $AlpineImageFileName
+}
+
+function EnsureWsl2Kernel
+{
+    $KernelUpdateUrl = "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
+
+    $KernelUpdateMsi = "$(MyDocumentsFolder)\wsl_update_x64.msi"
+
+    if(![System.IO.File]::Exists($KernelUpdateMsi))
+    {
+        Write-Host "Downloading WSL2 Kernel update"
+        Invoke-WebRequest -Uri $KernelUpdateUrl -OutFile $KernelUpdateMsi
+        Write-Host "Installing WSL2 kernel update"
+        & $KernelUpdateMsi /qn
+    }
 }
 
 if(RebootPending)
@@ -76,10 +94,6 @@ if((Get-WindowsOptionalFeature -Online -FeatureName:Microsoft-Windows-Subsystem-
     $NeedsPcRestart = $true
     Write-Host "Wsl has been enabled. This will be completed after a restart."
 }
-else
-{
-    Write-Host "Wsl is enabled"
-}
 
 #Enable HyperV if needed
 if((Get-WindowsOptionalFeature -Online -FeatureName:VirtualMachinePlatform).State -eq "Disabled")
@@ -89,13 +103,10 @@ if((Get-WindowsOptionalFeature -Online -FeatureName:VirtualMachinePlatform).Stat
     $NeedsPcRestart = $true
     Write-Host "HyperV has been enabled. This will be completed after a restart."
 }
-else
-{
-    Write-Host "HyperV is enabled"
-}
 
 if($NeedsPcRestart)
 {
+    EnsureWsl2Kernel
     Write-Host "Your computer needs to be restarted before wsl can be used."
     Restart-Computer -Confirm
     exit
