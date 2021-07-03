@@ -1,7 +1,7 @@
 #!/bin/bash
 
 echo "Installing Docker"
-
+ 
 apk del docker-cli docker-engine docker-openrc docker-compose docker
 apk update
 apk upgrade -U
@@ -36,7 +36,6 @@ if [ ! -S "/mnt/wsl/shared-docker/docker.sock" ]; then
     mkdir -pm o=,ug=rwx /mnt/wsl/shared-docker
     chgrp docker /mnt/wsl/shared-docker
 fi
-
 if [ ! $(pgrep dockerd) > 0 ]; then
     nohup dockerd < /dev/null > /mnt/wsl/shared-docker/dockerd.log 2>&1 &
 fi
