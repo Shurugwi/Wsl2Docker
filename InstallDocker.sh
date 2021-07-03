@@ -38,6 +38,6 @@ if [ ! -S "/mnt/wsl/shared-docker/docker.sock" ]; then
 fi
 
 if [ ! $(pgrep dockerd) > 0 ]; then
-    /mnt/c/Windows/System32/wsl.exe -d LocalDockerHost sh -c "nohup dockerd < /dev/null > $DOCKER_DIR/dockerd.log 2>&1" &
+    nohup dockerd < /dev/null > /mnt/wsl/shared-docker/dockerd.log 2>&1 &
 fi
 EOF
