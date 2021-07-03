@@ -39,4 +39,7 @@ fi
 if [ ! $(pgrep dockerd) > 0 ]; then
     nohup dockerd < /dev/null > /mnt/wsl/shared-docker/dockerd.log 2>&1 &
 fi
+
+cd ~/
+
 EOF
