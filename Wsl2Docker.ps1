@@ -106,7 +106,6 @@ if((Get-WindowsOptionalFeature -Online -FeatureName:VirtualMachinePlatform).Stat
 
 if($NeedsPcRestart)
 {
-    EnsureWsl2Kernel
     Write-Host "Your computer needs to be restarted before wsl can be used."
     Restart-Computer -Confirm
     exit
@@ -125,6 +124,7 @@ if($wsloutput -contains "LocalDockerHost")
 }
 else 
 {
+    & wsl --set-default-version 2
     Write-Host "Creating WSL docker environment. This may take a few minutes..."
 
     $DockerHostFolder = "$($DefaultWslFolder)\LocalDockerHost\"
@@ -135,13 +135,9 @@ else
         [System.IO.Directory]::CreateDirectory($DockerHostFolder)
     }
 
-    $DefaultWslFolder
-    $DockerHostFolder
-    $AlpineImageFileName
-
     $wsloutput = & wsl --import LocalDockerHost $DefaultWslFolder $AlpineImageFileName
-    $wsloutput
-    & wsl -d LocalDockerHost -e sh -c "ls"
+    #$wsloutput
+    & wsl -d LocalDockerHost -e sh -c "wget -q https://raw.githubusercontent.com/Shurugwi/Wsl2Docker/main/InstallDocker.sh -O - | ash && exit"
 }
 
 Write-Host "Done"
