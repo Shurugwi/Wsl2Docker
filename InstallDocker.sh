@@ -2,8 +2,6 @@
 
 echo "Installing Docker"
 
-cd ~/
-
 apk del docker-cli docker-engine docker-openrc docker-compose docker
 apk update
 apk upgrade -U
@@ -43,3 +41,7 @@ if [ ! $(pgrep dockerd) > 0 ]; then
 fi
 
 EOF
+
+clear
+
+echo "Installation complete."
