@@ -7,7 +7,8 @@ apk update
 apk upgrade -U
 
 apk add docker --repository=http://dl-cdn.alpinelinux.org/alpine/edge/community
-apk add shadow curl
+apk add shadow
+apk add curl
 
 apk update
 apk upgrade -U
