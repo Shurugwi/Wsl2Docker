@@ -53,8 +53,6 @@ function DownloadAlpineImage {
     return $AlpineImageFileName
 }
 
-Write-Host $RebootPending
-
 if($RebootPending)
 {
     Write-Host "Your computer needs to be restarted before running this script again."
@@ -62,7 +60,6 @@ if($RebootPending)
 }
 
 $IsElevated = ((New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -eq "False")
-
 if(!$IsElevated)
 {
     Write-Host "This script needs to be run with elevated privileges (Run as Administrator)"
@@ -70,8 +67,8 @@ if(!$IsElevated)
 }
 
 $NeedsPcRestart = $false
-#Enable WSL if needed
 
+#Enable WSL if needed
 if((Get-WindowsOptionalFeature -Online -FeatureName:Microsoft-Windows-Subsystem-Linux).State -eq "Disabled")
 {
     Write-Host "Wsl needs to be enabled"
@@ -106,7 +103,7 @@ if($NeedsPcRestart)
 
 $AlpineImageFileName = DownloadAlpineImage
 $wsloutput = (& wsl -l -q)
-#$wsloutput = Start-Process -FilePath wsl -ArgumentList "-l -q" -NoNewWindow
+
 if($wsloutput -contains "LocalDockerHost")
 {
     Write-Host "Docker Wsl Image already exists. Run the following command to remove it:"
@@ -119,7 +116,7 @@ else
 {
     Write-Host "Creating WSL docker environment. This may take a few minutes..."
 
-    $DockerHostFolder = "$($DefaultWslFolder)\LocalDockerHost\" 
+    $DockerHostFolder = "$($DefaultWslFolder)\LocalDockerHost\"
 
     if(![System.IO.Directory]::Exists($DefaultWslFolder))
     {
