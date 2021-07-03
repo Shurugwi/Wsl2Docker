@@ -67,7 +67,7 @@ function EnsureWsl2Kernel
         Write-Host "Downloading WSL2 Kernel update"
         Invoke-WebRequest -Uri $KernelUpdateUrl -OutFile $KernelUpdateMsi
         Write-Host "Installing WSL2 kernel update"
-        & $KernelUpdateMsi /qn
+        Start-Process -Wait -FilePath $KernelUpdateMsi
     }
 }
 
@@ -90,6 +90,7 @@ $NeedsPcRestart = $false
 if((Get-WindowsOptionalFeature -Online -FeatureName:Microsoft-Windows-Subsystem-Linux).State -eq "Disabled")
 {
     Write-Host "Wsl needs to be enabled"
+    EnsureWsl2Kernel
     dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
     $NeedsPcRestart = $true
     Write-Host "Wsl has been enabled. This will be completed after a restart."
@@ -106,7 +107,6 @@ if((Get-WindowsOptionalFeature -Online -FeatureName:VirtualMachinePlatform).Stat
 
 if($NeedsPcRestart)
 {
-    EnsureWsl2Kernel
     Write-Host "Your computer needs to be restarted before wsl can be used."
     Restart-Computer -Confirm
     exit
