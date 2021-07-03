@@ -1,7 +1,9 @@
 #!/bin/bash
 
 echo "Installing Docker"
- 
+
+cd ~/
+
 apk del docker-cli docker-engine docker-openrc docker-compose docker
 apk update
 apk upgrade -U
@@ -39,7 +41,5 @@ fi
 if [ ! $(pgrep dockerd) > 0 ]; then
     nohup dockerd < /dev/null > /mnt/wsl/shared-docker/dockerd.log 2>&1 &
 fi
-
-cd ~/
 
 EOF
