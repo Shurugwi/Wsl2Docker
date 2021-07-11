@@ -85,6 +85,9 @@ function EnsureWsl2Kernel
     {
         [System.IO.File]::Delete($EnableWsl2KernelTempFile)
     }
+
+    Write-Host "WSL2 Kernel updated. Please restart the script to continue"
+    exit
 }
 
 
@@ -159,7 +162,7 @@ else
 
     $wsloutput = & wsl --import LocalDockerHost $DefaultWslFolder $AlpineImageFileName
     #$wsloutput
-    & wsl -d LocalDockerHost -e sh -c "wget -q https://raw.githubusercontent.com/Shurugwi/Wsl2Docker/main/InstallDocker.sh -O - | ash && exit"
+    & wsl -d LocalDockerHost -e sh -c "echo 'Attempting to download installation script...' && wget -q https://raw.githubusercontent.com/Shurugwi/Wsl2Docker/main/InstallDocker.sh -O - | ash && exit"
 }
 
 Write-Host "Done"
