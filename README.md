@@ -16,3 +16,11 @@ These scripts enables a docker environment on Windows 10 without the need for Do
 Get-ExecutionPolicy
 Set-ExecutionPolicy RemoteSigned
 ```
+3. Clone the repo
+```
+git clone https://github.com/Shurugwi/Wsl2Docker.git
+```
+4. Run the powershell script
+```
+.\Wsl2Docker.ps1
+```
