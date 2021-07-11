@@ -17,7 +17,8 @@ function RebootPending {
         $util = [wmiclass]"\\.\root\ccm\clientsdk:CCM_ClientUtilities"
         $status = $util.DetermineIfRebootPending()
         if (($null -ne $status) -and $status.RebootPending) {
-            return $true
+            #return $true Disable
+            return $false
         }
     }
     catch { }
