@@ -163,7 +163,7 @@ else
     $wsloutput = & wsl --import LocalDockerHost $DefaultWslFolder $AlpineImageFileName
     $wsloutput
     & wsl -l -v
-    & wsl -d LocalDockerHost -e sh -c "echo 'Attempting to download installation script...' && ifconfig docker0 down && ifconfig docker0 up && wget -q https://raw.githubusercontent.com/Shurugwi/Wsl2Docker/main/InstallDocker.sh -O - | ash && exit"
+    & wsl -d LocalDockerHost -e sh -c "echo 'Attempting to download installation script...' && ifconfig eth0 down && ifconfig eth0 up && wget -q https://raw.githubusercontent.com/Shurugwi/Wsl2Docker/main/InstallDocker.sh -O - | ash && exit"
 }
 
 Write-Host "Done"
