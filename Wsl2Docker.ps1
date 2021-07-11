@@ -110,7 +110,6 @@ if((Get-WindowsOptionalFeature -Online -FeatureName:Microsoft-Windows-Subsystem-
     dism.exe /online /enable-feature /featurename:Microsoft-Windows-Subsystem-Linux /all /norestart
     $NeedsPcRestart = $true
     Write-Host "Wsl has been enabled. This will be completed after a restart."
-    EnsureWsl2Kernel
 }
 
 #Enable HyperV if needed
@@ -133,6 +132,7 @@ if($NeedsPcRestart)
     exit
 }
 
+EnsureWsl2Kernel
 $AlpineImageFileName = DownloadAlpineImage
 $wsloutput = (& wsl -l -q)
 
