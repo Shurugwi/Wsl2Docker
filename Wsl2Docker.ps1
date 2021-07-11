@@ -152,6 +152,14 @@ if($wsloutput -contains "LocalDockerHost")
 else 
 {
     & wsl --set-default-version 2
+    & sc stop cmservice
+    & sc stop hns
+    & sc stop vmcompute
+    & sc stop lxssmanager
+    & sc start cmservice
+    & sc start hns
+    & sc start vmcompute
+    & sc start lxssmanager    
     Write-Host "Creating WSL docker environment. This may take a few minutes..."
 
     $DockerHostFolder = "$($DefaultWslFolder)\LocalDockerHost\"
