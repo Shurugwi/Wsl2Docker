@@ -25,7 +25,7 @@ function RebootPending {
 
 function MyDocumentsFolder
 {
-    return [Environment]::GetFolderPath(“mydocuments”)
+    return [Environment]::GetFolderPath("mydocuments")
 }
 
 function GetAlpineVersion {
