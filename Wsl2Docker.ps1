@@ -5,7 +5,8 @@
 # Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 $DefaultWslFolder = "c:\Wsl"
- 
+$EnableWsl2KernelTempFile = $env:TEMP + "\enablewsl2kernel.tmp"
+
 function RebootPending {
     if (Get-ChildItem "HKLM:\Software\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending" -EA Ignore) { return $true }
     if (Get-Item "HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\WindowsUpdate\Auto Update\RebootRequired" -EA Ignore) { return $true }
@@ -58,18 +59,32 @@ function DownloadAlpineImage {
 
 function EnsureWsl2Kernel
 {
+    if(![System.IO.File]::Exists($EnableWsl2KernelTempFile))
+    {
+        return
+    }
+
     $KernelUpdateUrl = "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
 
-    $KernelUpdateMsi = "$(MyDocumentsFolder)\wsl_update_x64.msi"
+    $KernelUpdateMsi = "$($MyDocumentsFolder)\wsl_update_x64.msi"
 
     if(![System.IO.File]::Exists($KernelUpdateMsi))
     {
         Write-Host "Downloading WSL2 Kernel update"
         Invoke-WebRequest -Uri $KernelUpdateUrl -OutFile $KernelUpdateMsi
         Write-Host "Installing WSL2 kernel update"
-        Start-Process -Wait -FilePath $KernelUpdateMsi
+        #$KernelUpdateMsi
+        #& $KernelUpdateMsi /nq
+        Start-Process -Wait -FilePath $KernelUpdateMsi -ArgumentList "/qn"
+        Write-Host (& wsl --set-default-version 2)
+    }
+
+    if([System.IO.File]::Exists($EnableWsl2KernelTempFile))
+    {
+        [System.IO.File]::Delete($EnableWsl2KernelTempFile)
     }
 }
+
 
 if(RebootPending)
 {
@@ -107,6 +122,10 @@ if((Get-WindowsOptionalFeature -Online -FeatureName:VirtualMachinePlatform).Stat
 
 if($NeedsPcRestart)
 {
+    if(![System.IO.File]::Exists($EnableWsl2KernelTempFile))
+    {
+        [System.IO.File]::Create($EnableWsl2KernelTempFile)
+    }
     Write-Host "Your computer needs to be restarted before wsl can be used."
     Restart-Computer -Confirm
     exit
