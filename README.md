@@ -1,5 +1,18 @@
-# Wsl2Docker
+# Running Docker on WSL2 without Docker Desktop
 
+# Overview
+These scripts enables a docker environment on Windows 10 without the need for Docker Desktop.
 
-# Todo
-1
+# What the scripts do
+1. Enables WSL and Hyper-V if needed
+2. Install kernel update for wsl2
+3. Downloads latest Alpine Distro and creates a wsl distribution named LocalDockerHost
+4. Runs an sh script that installs docker in the alpine distro
+
+# Running the script
+1. Open a powershell as administrator
+2. Make sure your execution policy is set to at least RemoteSigned
+```
+Get-ExecutionPolicy
+Set-ExecutionPolicy RemoteSigned
+```
