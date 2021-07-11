@@ -151,7 +151,7 @@ if($wsloutput -contains "LocalDockerHost")
 }
 else 
 {
-    & wsl --set-default-version 2
+    & wsl --set-default-version 1
     & sc stop cmservice
     & sc stop hns
     & sc stop vmcompute
