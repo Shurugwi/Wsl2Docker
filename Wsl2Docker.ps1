@@ -4,6 +4,8 @@
 # or
 # Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
+
+
 $DefaultWslFolder = "c:\Wsl"
 $EnableWsl2KernelTempFile = $env:TEMP + "\enablewsl2kernel.tmp"
 
