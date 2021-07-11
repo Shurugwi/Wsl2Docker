@@ -86,6 +86,8 @@ function EnsureWsl2Kernel
         [System.IO.File]::Delete($EnableWsl2KernelTempFile)
     }
 
+    & wsl --shutdown
+
     Write-Host "WSL2 Kernel updated. Please restart the script to continue"
     exit
 }
