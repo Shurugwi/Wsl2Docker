@@ -79,6 +79,7 @@ function EnsureWsl2Kernel
         #$KernelUpdateMsi
         #& $KernelUpdateMsi /nq
         Start-Process -Wait -FilePath $KernelUpdateMsi -ArgumentList "/qn"
+        & wsl --shutdown
         Write-Host (& wsl --set-default-version 2)
     }
 
@@ -86,8 +87,6 @@ function EnsureWsl2Kernel
     {
         [System.IO.File]::Delete($EnableWsl2KernelTempFile)
     }
-
-    & wsl --shutdown
 
     Write-Host "WSL2 Kernel updated. Please restart the script to continue"
     exit
@@ -152,15 +151,15 @@ if($wsloutput -contains "LocalDockerHost")
 }
 else 
 {
-    & wsl --set-default-version 1
-    & sc stop cmservice
-    & sc stop hns
-    & sc stop vmcompute
-    & sc stop lxssmanager
-    & sc start cmservice
-    & sc start hns
-    & sc start vmcompute
-    & sc start lxssmanager    
+    #& wsl --set-default-version 1
+    #& sc stop cmservice
+    #& sc stop hns
+    #& sc stop vmcompute
+    #& sc stop lxssmanager
+    #& sc start cmservice
+    #& sc start hns
+    #& sc start vmcompute
+    #& sc start lxssmanager    
     Write-Host "Creating WSL docker environment. This may take a few minutes..."
 
     $DockerHostFolder = "$($DefaultWslFolder)\LocalDockerHost\"
@@ -174,7 +173,7 @@ else
     $wsloutput = & wsl --import LocalDockerHost $DefaultWslFolder $AlpineImageFileName
     $wsloutput
     & wsl -l -v
-    & wsl -d LocalDockerHost -e sh -c "echo 'Attempting to download installation script...' && ifconfig eth0 down && ifconfig eth0 up && wget -q https://raw.githubusercontent.com/Shurugwi/Wsl2Docker/main/InstallDocker.sh -O - | ash && exit"
+    & wsl -d LocalDockerHost -e sh -c "echo 'Attempting to download installation script...' && wget -q https://raw.githubusercontent.com/Shurugwi/Wsl2Docker/main/InstallDocker.sh -O - | ash && exit"
 }
 
 Write-Host "Done"
