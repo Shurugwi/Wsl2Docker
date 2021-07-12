@@ -1,4 +1,4 @@
-﻿# This script needs to run with elevated privileges as it needs to make system changes.
+# This script needs to run with elevated privileges as it needs to make system changes.
 # ExecutionPolicy must be set to run sctipts. At least for the current user.
 # Set-ExecutionPolicy -ExecutionPolicy RemoteSigned
 # or
