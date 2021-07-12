@@ -70,7 +70,7 @@ function EnsureWsl2Kernel
     #$KernelUpdateUrl = "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
     $KernelUpdateUrl = "https://github.com/Shurugwi/Wsl2Docker/raw/main/wsl_update_x64.msi"
 
-    $KernelUpdateMsi = "$($MyDocumentsFolder)\wsl_update_x64.msi"
+    $KernelUpdateMsi = "$(MyDocumentsFolder)\wsl_update_x64.msi"
 
     if(![System.IO.File]::Exists($KernelUpdateMsi))
     {
