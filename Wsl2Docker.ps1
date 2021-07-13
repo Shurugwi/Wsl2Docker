@@ -174,6 +174,7 @@ else
     $wsloutput = & wsl --import LocalDockerHost $DefaultWslFolder $AlpineImageFileName
     $wsloutput
     & wsl -l -v
+    & wsl -d LocalDockerHost -e sh -c "exit"
     & wsl -d LocalDockerHost -e sh -c "echo 'Attempting to download installation script...' && echo 'nameserver 8.8.8.8' >> /etc/resolv.conf && wget -q https://raw.githubusercontent.com/Shurugwi/Wsl2Docker/main/InstallDocker.sh -O - | ash && exit"
 }
 
