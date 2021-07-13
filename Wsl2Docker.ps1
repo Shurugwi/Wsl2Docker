@@ -94,11 +94,11 @@ function EnsureWsl2Kernel
 }
 
 
-if(RebootPending)
-{
-    Write-Host "Your computer needs to be restarted before running this script again."
-    exit
-}
+#if(RebootPending)
+#{
+#    Write-Host "Your computer needs to be restarted before running this script again."
+#    exit
+#}
 
 $IsElevated = ((New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -eq "False")
 if(!$IsElevated)
