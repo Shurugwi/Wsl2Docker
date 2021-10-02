@@ -6,8 +6,8 @@ These scripts enables a docker environment on Windows 10 without the need for Do
 # What the scripts do
 1. Enables WSL and Hyper-V if needed
 2. Install kernel update for wsl2
-3. Downloads latest Alpine Distro and creates a wsl distribution named LocalDockerHost
-4. Runs an sh script that installs docker in the alpine distro
+3. Downloads latest Ubuntu 20.04 Distro and creates a wsl distribution named LocalDockerHost
+4. Runs an sh script that installs docker in the Ubuntu distro
 
 # Running the script
 1. Open a powershell as administrator
