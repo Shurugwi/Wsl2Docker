@@ -29,7 +29,6 @@ function RebootPending {
 function DownloadUbuntuImage
 {
     $ImageUrl = "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64-wsl.rootfs.tar.gz"
-    #$ImageFileName = "$(MyDocumentsFolder)\ubuntu2004.appx"
     $ImageFileName = "$(MyDocumentsFolder)\ubuntu-20.04-server-cloudimg-amd64.tar.gz"
 
     if(![System.IO.File]::Exists($ImageFileName))
@@ -143,15 +142,6 @@ if($wsloutput -contains "LocalDockerHost")
 }
 else 
 {
-    #& wsl --set-default-version 1
-    #& sc stop cmservice
-    #& sc stop hns
-    #& sc stop vmcompute
-    #& sc stop lxssmanager
-    #& sc start cmservice
-    #& sc start hns
-    #& sc start vmcompute
-    #& sc start lxssmanager    
     Write-Host "Creating WSL docker environment. This may take a few minutes..."
 
     $DockerHostFolder = "$($DefaultWslFolder)\LocalDockerHost\"
@@ -164,12 +154,10 @@ else
 
     Write-Host "wsl --import LocalDockerHost $($DefaultWslFolder) $($ImageFileName)"
     $wsloutput = & wsl --import LocalDockerHost $DefaultWslFolder $ImageFileName
-    #Import-Module Appx
-    #$wsloutput = Add-AppxPackage $ImageFileName 
     $wsloutput
     & wsl -l -v
-    #& wsl -d LocalDockerHost -e sh -c "echo '185.199.109.133 raw.githubusercontent.com' >> /etc/hosts && exit"
-    #& wsl -d LocalDockerHost -e sh -c "echo 'Attempting to download installation script...' && echo 'nameserver 8.8.8.8' >> /etc/resolv.conf && wget -q https://raw.githubusercontent.com/Shurugwi/Wsl2Docker/main/InstallDockerAlpine.sh -O - | ash && exit"
+    & wsl -d LocalDockerHost -e sh -c "echo '185.199.109.133 raw.githubusercontent.com' >> /etc/hosts && exit"
+    & wsl -d LocalDockerHost -e sh -c "echo 'Attempting to download installation script...' && echo 'nameserver 8.8.8.8' >> /etc/resolv.conf && wget -q https://raw.githubusercontent.com/Shurugwi/Wsl2Docker/main/InstallDocker.sh -O - | bash && exit"
 }
 
 Write-Host "Done"
