@@ -18,23 +18,31 @@ echo "deb [arch=amd64] https://download.docker.com/linux/${ID} ${VERSION_CODENAM
 apt update
 
 apt install docker-ce docker-ce-cli containerd.io -y
+usermod -aG docker $USER
 groupmod -g 36257 docker
 
 DOCKER_DIR=/mnt/wsl/shared-docker
 mkdir -pm o=,ug=rwx "$DOCKER_DIR"
 chgrp docker "$DOCKER_DIR"
 
-tee -a ~/.bashrc <<EOF
-DOCKER_DISTRO="LocalDockerHost"
-DOCKER_DIR=/mnt/wsl/shared-docker
-DOCKER_SOCK="$DOCKER_DIR/docker.sock"
-export DOCKER_HOST="unix://$DOCKER_SOCK"
-if [ ! -S "$DOCKER_SOCK" ]; then
-    mkdir -pm o=,ug=rwx "$DOCKER_DIR"
-    chgrp docker "$DOCKER_DIR"
-    /mnt/c/Windows/System32/wsl.exe -d $DOCKER_DISTRO sh -c "nohup -b dockerd < /dev/null > $DOCKER_DIR/dockerd.log 2>&1"
-fi
+mkdir -p /etc/docker/
+
+tee -a /etc/docker/daemon.json <<EOF
+{
+  "hosts": ["unix:///mnt/wsl/shared-docker/docker.sock"]
+}
 EOF
 
+tee -a ~/.bashrc <<EOF
+export DOCKER_HOST="unix:///mnt/wsl/shared-docker/docker.sock"
+if [ ! -S "/mnt/wsl/shared-docker/docker.sock" ]; then
+    mkdir -pm o=,ug=rwx /mnt/wsl/shared-docker
+    chgrp docker /mnt/wsl/shared-docker
+fi
+if [ ! "\$(pgrep dockerd)" ]; then
+    nohup dockerd < /dev/null > /mnt/wsl/shared-docker/dockerd.log 2>&1 &
+fi
+
+EOF
 
 echo "Installation complete."
