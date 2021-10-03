@@ -17,8 +17,7 @@ function RebootPending {
         $util = [wmiclass]"\\.\root\ccm\clientsdk:CCM_ClientUtilities"
         $status = $util.DetermineIfRebootPending()
         if (($null -ne $status) -and $status.RebootPending) {
-            #return $true Disable
-            return $false
+            return $true
         }
     }
     catch { }
@@ -66,8 +65,6 @@ function EnsureWsl2Kernel
         Write-Host "Downloading WSL2 Kernel update"
         Invoke-WebRequest -Uri $KernelUpdateUrl -OutFile $KernelUpdateMsi
         Write-Host "Installing WSL2 kernel update"
-        #$KernelUpdateMsi
-        #& $KernelUpdateMsi /nq
         Start-Process -Wait -FilePath $KernelUpdateMsi -ArgumentList "/qn"
         & wsl --shutdown
         Write-Host (& wsl --set-default-version 2)
