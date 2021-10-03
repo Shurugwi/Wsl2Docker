@@ -24,3 +24,12 @@ git clone https://github.com/Shurugwi/Wsl2Docker.git
 ```
 .\Wsl2Docker.ps1
 ```
+5. Start the instance
+```
+wsl -d LocalDockerHost
+```
+
+# Delete the wsl instance
+```
+wsl --unregister LocalDockerHost
+```
