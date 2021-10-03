@@ -5,8 +5,8 @@
 # Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
 
-
 $DefaultWslFolder = "c:\Wsl"
+$ImageUrl = "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64-wsl.rootfs.tar.gz"
 $EnableWsl2KernelTempFile = $env:TEMP + "\enablewsl2kernel.tmp"
 
 function RebootPending {
@@ -28,7 +28,6 @@ function RebootPending {
 
 function DownloadUbuntuImage
 {
-    $ImageUrl = "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64-wsl.rootfs.tar.gz"
     $ImageFileName = "$(MyDocumentsFolder)\ubuntu-20.04-server-cloudimg-amd64.tar.gz"
 
     if(![System.IO.File]::Exists($ImageFileName))
@@ -84,11 +83,11 @@ function EnsureWsl2Kernel
 }
 
 
-#if(RebootPending)
-#{
-#    Write-Host "Your computer needs to be restarted before running this script again."
-#    exit
-#}
+if(RebootPending)
+{
+    Write-Host "Your computer needs to be restarted before running this script again."
+    exit
+}
 
 $IsElevated = ((New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -eq "False")
 if(!$IsElevated)
