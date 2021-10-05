@@ -44,6 +44,8 @@ if [ ! "\$(pgrep dockerd)" ]; then
     nohup dockerd < /dev/null > /mnt/wsl/shared-docker/dockerd.log 2>&1 &
 fi
 
+echo nameserver 8.8.8.8 | tee /etc/resolv.conf
+
 EOF
 
 echo "Installation complete."
