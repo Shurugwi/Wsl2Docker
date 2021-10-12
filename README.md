@@ -22,7 +22,7 @@ git clone https://github.com/Shurugwi/Wsl2Docker.git
 ```
 4. Run the powershell script
 ```
-.\Wsl2Docker.ps1
+.\DockerOnWsl2.ps1
 ```
 5. Start the instance
 ```
