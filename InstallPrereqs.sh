@@ -44,14 +44,43 @@ if [ ! "\$(pgrep dockerd)" ]; then
     nohup dockerd < /dev/null > /mnt/wsl/shared-docker/dockerd.log 2>&1 &
 fi
 
-echo nameserver 8.8.8.8 | tee /etc/resolv.conf
-
 EOF
 
-wget -q https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb -O packages-microsoft-prod.deb
-dpkg -i packages-microsoft-prod.deb
-apt update -y
-apt install powershell -y
+# <OPTIONAL>
+# #Powershell and .Net is optional
+# echo "Installing Powershell"
+# wget -q https://packages.microsoft.com/config/ubuntu/$(lsb_release -rs)/packages-microsoft-prod.deb -O /tmp/packages-microsoft-prod.deb
+# dpkg -i /tmp/packages-microsoft-prod.deb
+# apt update -y
+# apt install powershell -y
+# rm -rf /tmp/packages-microsoft-prod.deb
+
+# #TODO: Better way to install .NET Core?
+# echo "Installing .NET Core"
+# wget https://dot.net/v1/dotnet-install.sh -O - | bash /dev/stdin --channel LTS
+
+# tee -a ~/.bashrc <<EOF
+# export PATH=\$PATH:/root/.dotnet
+# EOF
+# </OPTIONAL>
+
+# Install kubectl if needed
+if ! command -v kubectl &> /dev/null; then
+  echo "Installing kubectl"
+  apt update
+  apt install -y apt-transport-https ca-certificates curl
+  curl -fsSLo /usr/share/keyrings/kubernetes-archive-keyring.gpg https://packages.cloud.google.com/apt/doc/apt-key.gpg
+  echo "deb [signed-by=/usr/share/keyrings/kubernetes-archive-keyring.gpg] https://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+  apt update
+  apt install -y kubectl
+fi
+
+# Install k3d if needed
+if ! command -v k3d &> /dev/null; then
+  echo "Installing k3d"
+  apt update
+  wget -q -O - https://raw.githubusercontent.com/rancher/k3d/main/install.sh | bash
+fi
 
 apt update -y
 apt upgrade -y
