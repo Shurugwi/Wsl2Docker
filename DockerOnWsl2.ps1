@@ -4,10 +4,11 @@
 # or
 # Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser
 
-
 $DefaultWslFolder = "c:\Wsl"
 $ImageUrl = "https://cloud-images.ubuntu.com/releases/focal/release/ubuntu-20.04-server-cloudimg-amd64-wsl.rootfs.tar.gz"
-$EnableWsl2KernelTempFile = $env:TEMP + "\enablewsl2kernel.tmp"
+$TempFolder = $env:TEMP
+$EnableWsl2KernelTempFile = $TempFolder + "\enablewsl2kernel.tmp"
+$ImageFileName = "$($TempFolder)\ubuntu-20.04-server-cloudimg-amd64.tar.gz"
 
 function RebootPending {
     if (Get-ChildItem "HKLM:\Software\Microsoft\Windows\CurrentVersion\Component Based Servicing\RebootPending" -EA Ignore) { return $true }
@@ -27,13 +28,14 @@ function RebootPending {
 
 function DownloadUbuntuImage
 {
-    $ImageFileName = "$(MyDocumentsFolder)\ubuntu-20.04-server-cloudimg-amd64.tar.gz"
-
     if(![System.IO.File]::Exists($ImageFileName))
     {
         Write-Host "Downloading Ubuntu 20.04. Be patient, this will take a few minutes..."
+        Write-Host "From " + $ImageUrl
+        Write-Host "To " + $ImageFileName
         $ProgressPreference = 'SilentlyContinue'
         Invoke-WebRequest -Uri $ImageUrl -OutFile $ImageFileName
+        Write-Host "Done"
     }
     else 
     {
@@ -41,11 +43,6 @@ function DownloadUbuntuImage
     }    
 
     return $ImageFileName
-}
-
-function MyDocumentsFolder
-{
-    return [Environment]::GetFolderPath("mydocuments")
 }
 
 function EnsureWsl2Kernel
@@ -58,7 +55,7 @@ function EnsureWsl2Kernel
     #$KernelUpdateUrl = "https://wslstorestorage.blob.core.windows.net/wslblob/wsl_update_x64.msi"
     $KernelUpdateUrl = "https://github.com/Shurugwi/Wsl2Docker/raw/main/wsl_update_x64.msi"
 
-    $KernelUpdateMsi = "$(MyDocumentsFolder)\wsl_update_x64.msi"
+    $KernelUpdateMsi = "$($TempFolder)\wsl_update_x64.msi"
 
     if(![System.IO.File]::Exists($KernelUpdateMsi))
     {
@@ -79,11 +76,15 @@ function EnsureWsl2Kernel
     exit
 }
 
-
 if(RebootPending)
 {
-    Write-Host "Your computer needs to be restarted before running this script again."
-    exit
+    Write-Host "Your computer has a pending restart. It is recommended to restart before you continue this script."
+    $RestartDecline = Read-Host -Prompt "Continue anyway? (y/n)"
+    if($RestartDecline -ne "y") 
+    {
+        Write-Host "Aborting script"
+        exit
+    }
 }
 
 $IsElevated = ((New-Object Security.Principal.WindowsPrincipal([Security.Principal.WindowsIdentity]::GetCurrent())).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator) -eq "False")
