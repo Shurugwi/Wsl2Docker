@@ -1,9 +1,9 @@
 #!/bin/bash
 
-echo -e "[network]\ngenerateResolvConf = false" | tee -a /etc/wsl.conf
-unlink /etc/resolv.conf
-echo nameserver 1.1.1.1 | tee /etc/resolv.conf
-echo nameserver 8.8.8.8 | tee /etc/resolv.conf
+# echo -e "[network]\ngenerateResolvConf = false" | tee -a /etc/wsl.conf
+# unlink /etc/resolv.conf
+# echo nameserver 1.1.1.1 | tee /etc/resolv.conf
+# echo nameserver 8.8.8.8 | tee /etc/resolv.conf
 
 echo "Installing Docker"
 
