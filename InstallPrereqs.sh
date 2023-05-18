@@ -12,6 +12,8 @@ apt remove docker docker-engine docker.io containerd runc docker-cli docker-open
 apt install --no-install-recommends apt-transport-https ca-certificates curl gnupg2 -y
 apt upgrade -y
 
+apt install jq -y
+
 source /etc/os-release
 curl -fsSL https://download.docker.com/linux/${ID}/gpg | apt-key add -
 
