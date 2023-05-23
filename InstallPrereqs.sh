@@ -9,10 +9,8 @@ echo "Installing Docker"
 
 apt update
 apt remove docker docker-engine docker.io containerd runc docker-cli docker-openrc docker-compose
-apt install --no-install-recommends apt-transport-https ca-certificates curl gnupg2 -y
+apt install --no-install-recommends apt-transport-https ca-certificates curl gnupg2 jq openssl -y
 apt upgrade -y
-
-apt install jq -y
 
 source /etc/os-release
 curl -fsSL https://download.docker.com/linux/${ID}/gpg | apt-key add -
@@ -59,11 +57,11 @@ EOF
 
 # #TODO: Better way to install .NET Core?
 # echo "Installing .NET Core"
-# wget https://dot.net/v1/dotnet-install.sh -O - | bash /dev/stdin --channel LTS
+wget https://dot.net/v1/dotnet-install.sh -O - | bash /dev/stdin --channel LTS
 
-# tee -a ~/.bashrc <<EOF
-# export PATH=\$PATH:/root/.dotnet
-# EOF
+tee -a ~/.bashrc <<EOF
+export PATH=\$PATH:/root/.dotnet
+EOF
 # </OPTIONAL>
 
 # Install kubectl if needed
