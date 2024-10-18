@@ -3,6 +3,7 @@
 echo "Installing Docker"
 
 # Remove any old versions
+rm /etc/apt/sources.list.d/docker.list /etc/apt/sources.list.d/kubernetes.list
 apt update
 apt remove -y docker docker-engine docker.io containerd runc docker-cli docker-openrc docker-compose
 
